@@ -2,6 +2,11 @@ package com.y.back.models.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
+import java.util.List;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,18 +19,18 @@ import jakarta.persistence.Table;
  */
 @Entity
 @Table(name = "persons")
-public class Person {
+public class Person implements UserDetails {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer id;
 
-  @Column(name = "username")
+  @Column(name = "username", unique = true)
   private String username;
 
   @Column(name = "password")
   private String password;
 
-  @Column(name = "email")
+  @Column(name = "email", unique = true)
   private String email;
 
   @Column(name = "age")
@@ -63,28 +68,15 @@ public class Person {
     this.role = role;
   }
 
+  public Person(){
+  }
+
   public Integer getId() {
     return id;
   }
 
   public void setId(Integer id) {
     this.id = id;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getPassword() {
-    return password;
-  }
-
-  public void setPassword(String password) {
-    this.password = password;
   }
 
   public String getEmail() {
@@ -125,5 +117,49 @@ public class Person {
 
   public void setRole(String role) {
     this.role = role;
+  }
+
+  @Override
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
+  @Override
+  public String getPassword() {
+    return password;
+  }
+
+  public void setPassword(String password) {
+    this.password = password;
+  }
+
+  @Override
+  @JsonIgnore
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of();
+  }
+
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
+  }
+
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
+  }
+
+  @Override
+  public boolean isEnabled() {
+    return true;
   }
 }
